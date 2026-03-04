@@ -41,7 +41,7 @@ public class PatientService : IPatientService
             .FirstOrDefaultAsync(p => p.DossierNumber == dossierNumber);
     }
 
-    // Recherche par nom OU prénom, insensible à la casse
+    // Recherche par nom OU prénom
     public async Task<IEnumerable<Patient>> SearchByNameAsync(string name)
     {
         return await _context.Patients
@@ -59,8 +59,8 @@ public class PatientService : IPatientService
             .AsNoTracking()
             .OrderBy(p => p.LastName)
             .ThenBy(p => p.FirstName)
-            .Skip((page - 1) * pageSize)   // On saute les pages précédentes
-            .Take(pageSize)                 // On prend uniquement la page demandée
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
     }
 
@@ -78,10 +78,8 @@ public class PatientService : IPatientService
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            // Récupère l'entrée en conflit
             var entry = ex.Entries.Single();
 
-            // Valeurs actuelles en base (ce qu'un autre utilisateur a sauvegardé)
             var databaseValues = await entry.GetDatabaseValuesAsync();
 
             if (databaseValues is null)
@@ -114,7 +112,6 @@ public class PatientService : IPatientService
         await _context.SaveChangesAsync();
     }
 
-    // Compter les patients par département
     public async Task<Dictionary<string, int>> CountPatientsByDepartmentAsync()
     {
         return await _context.Consultations

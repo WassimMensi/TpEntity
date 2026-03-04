@@ -55,7 +55,7 @@ public class ConsultationService : IConsultationService
                      && c.Date > DateTime.Now
                      && c.Status != ConsultationStatus.Cancelled)
             .OrderBy(c => c.Date)
-            .Include(c => c.Doctor)   // Eager loading du médecin
+            .Include(c => c.Doctor)
             .ToListAsync();
     }
 
@@ -71,7 +71,7 @@ public class ConsultationService : IConsultationService
                      && c.Date < tomorrow
                      && c.Status != ConsultationStatus.Cancelled)
             .OrderBy(c => c.Date)
-            .Include(c => c.Patient)  // Eager loading du patient
+            .Include(c => c.Patient)
             .ToListAsync();
     }
 }

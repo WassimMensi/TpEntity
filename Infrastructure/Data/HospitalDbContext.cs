@@ -70,7 +70,6 @@ public class HospitalDbContext : DbContext
             });
         });
 
-        // --- Doctor ---
         modelBuilder.Entity<Doctor>(entity =>
         {
             entity.HasIndex(d => d.LicenseNumber).IsUnique();
@@ -115,7 +114,6 @@ public class HospitalDbContext : DbContext
                   .HasDatabaseName("IX_Consultations_PatientId_Date");
         });
 
-        // --- Héritage TPH : Staff ---
         modelBuilder.Entity<Staff>(entity =>
         {
             entity.HasDiscriminator<string>("StaffType")

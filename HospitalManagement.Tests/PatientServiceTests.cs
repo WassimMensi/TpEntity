@@ -10,7 +10,6 @@ public class PatientServiceTests
     [Fact]
     public async Task CreateAsync_ValidPatient_ReturnsCreatedPatient()
     {
-        // Arrange
         var context = DbContextFactory.CreateInMemory("CreatePatient_Valid");
         var repository = new PatientRepository(context);
         var service = new PatientService(context);
@@ -24,10 +23,8 @@ public class PatientServiceTests
             Phone = "0612345678"
         };
 
-        // Act
         var result = await service.CreateAsync(patient);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal("Jean", result.FirstName);
         Assert.NotEmpty(result.DossierNumber);
@@ -36,7 +33,6 @@ public class PatientServiceTests
     [Fact]
     public async Task CreateAsync_FutureDateOfBirth_ThrowsArgumentException()
     {
-        // Arrange
         var context = DbContextFactory.CreateInMemory("CreatePatient_FutureDate");
         var service = new PatientService(context);
 
@@ -45,17 +41,15 @@ public class PatientServiceTests
             FirstName = "Jean",
             LastName = "Dupont",
             Email = "jean@email.com",
-            DateOfBirth = DateTime.Today.AddDays(1) // Date dans le futur
+            DateOfBirth = DateTime.Today.AddDays(1)
         };
 
-        // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(patient));
     }
 
     [Fact]
     public async Task CreateAsync_DuplicateEmail_ThrowsInvalidOperationException()
     {
-        // Arrange
         var context = DbContextFactory.CreateInMemory("CreatePatient_DuplicateEmail");
         var service = new PatientService(context);
 
@@ -71,21 +65,18 @@ public class PatientServiceTests
         {
             FirstName = "Marie",
             LastName = "Martin",
-            Email = "same@email.com", // Même email
+            Email = "same@email.com",
             DateOfBirth = new DateTime(1985, 5, 15)
         };
 
-        // Act
         await service.CreateAsync(patient1);
 
-        // Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateAsync(patient2));
     }
 
     [Fact]
     public async Task DeleteAsync_PatientWithConsultations_ThrowsInvalidOperationException()
     {
-        // Arrange
         var context = DbContextFactory.CreateInMemory("DeletePatient_WithConsultations");
         var service = new PatientService(context);
 
@@ -109,7 +100,6 @@ public class PatientServiceTests
         context.Consultations.Add(consultation);
         await context.SaveChangesAsync();
 
-        // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteAsync(patient.Id));
     }
 }

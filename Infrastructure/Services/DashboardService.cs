@@ -15,11 +15,10 @@ public class DashboardService : IDashboardService
     }
 
     // Vue 1 : Fiche patient avec toutes ses consultations
-    // Utilise une projection directe → évite de charger des champs inutiles
     public async Task<PatientRecordDto?> GetPatientRecordAsync(int patientId)
     {
         return await _context.Patients
-            .AsNoTracking() // Lecture seule → pas de tracking EF Core
+            .AsNoTracking()
             .Where(p => p.Id == patientId)
             .Select(p => new PatientRecordDto
             {
@@ -27,7 +26,6 @@ public class DashboardService : IDashboardService
                 FullName = p.FirstName + " " + p.LastName,
                 DossierNumber = p.DossierNumber,
                 Email = p.Email,
-                // Projection imbriquée → EF Core génère un seul JOIN SQL
                 Consultations = p.Consultations
                     .OrderByDescending(c => c.Date)
                     .Select(c => new ConsultationSummaryDto
@@ -70,7 +68,6 @@ public class DashboardService : IDashboardService
     }
 
     // Vue 3 : Statistiques par département
-    // Projection avec agrégation → COUNT directement en SQL, pas en mémoire
     public async Task<IEnumerable<DepartmentStatsDto>> GetDepartmentStatsAsync()
     {
         return await _context.Departments
