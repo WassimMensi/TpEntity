@@ -39,6 +39,7 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<HospitalDbContext>();
+    await context.Database.MigrateAsync();
     await DataSeeder.SeedAsync(context);
 }
 
