@@ -45,7 +45,7 @@ TpHopital/
 ```
 
 ### Domain
-Contient les contrats (interfaces) et les entités métier. Aucune dépendance vers EF Core ou la couche infra.
+Contient les interfaces et les entités métier. Aucune dépendance vers EF Core ou la couche infra.
 
 ### Infrastructure
 Implémente les interfaces du Domain. Contient le `HospitalDbContext`, les repositories et les services métier.
